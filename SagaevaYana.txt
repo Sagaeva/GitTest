@@ -1,0 +1,164 @@
+SHOW Tables;
+
+SELECT * FROM country;
+
+SELECT * FROM movie;
+
+SELECT * FROM movie_languages;
+
+
+SELECT * FROM movie_cast;
+
+SELECT * FROM movie_keywords
+WHERE keyword_id = 161176 ;
+
+SELECT * FROM keyword
+;
+
+SELECT * FROM movie_genres;
+
+SELECT * FROM genre;
+
+SELECT * FROM person
+;
+
+SELECT * FROM gender;
+
+/*0. Toon alle movie die langer zijn dan 2 uur (120 minuten) */
+
+SELECT title, runtime 
+FROM movie
+WHERE runtime >= 120;
+
+/*1. Toon alle movie die het woord 'teen' in de titel hebben. */
+
+SELECT title
+FROM movie
+WHERE title LIKE '%teen%';
+
+
+
+ /*Toon alle verschillende waarden voor de column vote_averagein de tabel movie. */
+
+SELECT  vote_average
+FROM movie;
+
+
+
+/*Maak een lijst van alle titels met de revenue in Britse Pond en in Euro. De huidige 'revenue'
+ column staat in Euro. Om Britse Pond om te zetten naar Euro vermenigvuldig je Euro * 1.11. 
+ */
+
+SELECT title, budget , budget * 1.11  AS BritsePond
+FROM movie;
+
+/*4 */ 
+
+SELECT  gender.gender, COUNT(movie_cast.gender_id) AS aantal
+FROM movie_cast
+JOIN gender ON movie_cast.gender_id = gender.gender_id
+GROUP BY movie_cast.gender_id 
+;
+
+
+/* 5. Toon movie titles met meer dan 2 talen, Tabel: movie, movie_languages. 
+ * Wie problemen heeft met vraag 5: gebruik de movie_id van de movie_languages tabel,
+ *  en je telt het aantal language_id per movie_id. 
+ * Je gaat zien dat elke movie verschillende talen heeft. 
+ *   Ik wil enkel de titels zien die meer dan 2 talen hebben Перепроверить !!!*/
+
+
+
+
+SELECT movie.title ,  COUNT(movie_languages.language_id) AS languaseCount
+FROM movie
+JOIN movie_languages ON movie.movie_id = movie_languages.movie_id 
+GROUP BY movie.movie_id 
+HAVING COUNT(movie_languages.language_id) > 2 
+;
+
+
+
+/*Tabel: movie, movie_keywords, keyword 
+ 6. Toon alle unieke filmen hebben die ‘space opera’ 
+ als keyword hebben, maar die NIET ‘star’ in de movie title 
+  Остановилась на этомм   Проверить*/
+
+
+
+;
+
+
+
+SELECT   movie.title
+FROM movie_keywords, keyword, movie
+WHERE keyword.keyword_name LIKE '%space opera%' AND movie.title 
+NOT LIKE '%star%' AND movie_keywords.keyword_id = keyword.keyword_id 
+AND movie.movie_id = movie_keywords.movie_id  
+;
+
+
+
+/*Tabel: movie, genre, movie_genre 
+ * Toon alle Horror movies
+ 9. Bedenk een manier om niet gebruikte genres te tonen,
+    indien er een genre niet gebruikt word Проверить*/
+
+SELECT movie.title 
+FROM movie, genre, movie_genres
+WHERE genre_name LIKE '%Horror%' AND movie_genres.genre_id  = genre.genre_id 
+AND movie.movie_id = movie_genres.movie_id 
+;
+
+/* Tabel: person, movie_cast
+    10. Toon de top 5 person
+met de meeste movies .Zet hun naam naast het aantal filmen dat ze gespeeld
+ hebben. Проверить */
+
+SELECT person.person_name, COUNT(movie_cast.movie_id) AS AMOUNT
+FROM person 
+JOIN movie_cast  ON person.person_id = movie_cast.person_id
+GROUP BY movie_cast.person_id 
+ORDER BY AMOUNT DESC
+LIMIT 5
+;
+
+ /* 11. Toon alle movies die langer zijn dan de gemiddelde lengte van alle movies. Rangschik het resultaat
+ alfabetisch volgens title.
+BONUS
+: We willen enkel rekening houden met lang-speel-films (films die minstens 90 minuten duren). Проверить */
+
+
+
+SELECT title, runtime 
+FROM movie 
+WHERE runtime > (SELECT AVG(runtime) FROM movie)
+ORDER BY title  ASC ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
